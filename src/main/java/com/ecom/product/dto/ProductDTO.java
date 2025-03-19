@@ -17,6 +17,8 @@ public class ProductDTO {
     @Min(value = 0, message = "Product price must be at least 0")
     private Double price;
 
+    private Long categoryId;
+
     public Long getId() {
         return id;
     }
@@ -39,5 +41,13 @@ public class ProductDTO {
 
     public void setPrice(Double price) {
         this.price = price;
+    }
+
+    public Long getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(Long categoryId) {
+        this.categoryId = categoryId;
     }
 }
