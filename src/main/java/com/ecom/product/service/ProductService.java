@@ -9,6 +9,7 @@ import com.ecom.product.repository.CategoryRepository;
 import com.ecom.product.repository.ProductRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
@@ -43,6 +44,7 @@ public class ProductService {
     }
 
 
+
     public ProductDTO getProduct(Long id) {
         return repository.findById(id)
                 .map(productMapper::toDto)
@@ -63,6 +65,13 @@ public class ProductService {
         } catch (ProductNotFoundException e) {
             throw new ProductNotFoundException("No Products");
         }
+    }
+
+    public List<ProductDTO> getProducts(){
+        List<Product> products = repository.findAll();
+        return products.stream()
+                .map(product -> productMapper.toDto(product))
+                .collect(Collectors.toList());
     }
 
 }

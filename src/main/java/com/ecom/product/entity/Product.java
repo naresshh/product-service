@@ -1,5 +1,6 @@
 package com.ecom.product.entity;
 
+import com.ecom.product.dto.Unit;
 import jakarta.persistence.*;
 
 @Entity
@@ -15,6 +16,9 @@ public class Product {
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
+
+    @Enumerated(EnumType.STRING)
+    private Unit unit;
 
     public Long getId() {
         return id;
@@ -46,5 +50,13 @@ public class Product {
 
     public void setCategory(Category category) {
         this.category = category;
+    }
+
+    public Unit getUnit() {
+        return unit;
+    }
+
+    public void setUnit(Unit unit) {
+        this.unit = unit;
     }
 }
