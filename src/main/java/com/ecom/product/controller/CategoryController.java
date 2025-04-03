@@ -1,59 +1,63 @@
 package com.ecom.product.controller;
 
-import com.ecom.product.dto.CategoryDTO;
-import com.ecom.product.dto.ProductDTO;
-import com.ecom.product.service.CategoryService;
-import com.ecom.product.service.ProductService;
+import com.ecom.product.dto.CategoryDto;
+import com.ecom.product.entity.Category;
+import com.ecom.product.mapper.CategoryMapper;
+import com.ecom.product.repository.CategoryRepository;
+import com.ecom.product.service.CategoryServiceImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import jakarta.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/categories")
-@CrossOrigin(origins = "http://localhost:3000")
+@RequestMapping("api/categories")
+@CrossOrigin(origins = "http://localhost:5173")
 public class CategoryController {
 
-    private final CategoryService categoryService;
-    private final ProductService productService;
+    private final CategoryServiceImpl categoryService;
 
     @Autowired
-    public CategoryController(CategoryService categoryService,ProductService productService) {
+    private CategoryRepository categoryRepository;
+
+    public CategoryController(CategoryServiceImpl categoryService) {
         this.categoryService = categoryService;
-        this.productService = productService;
     }
 
     @PostMapping
-    public ResponseEntity<CategoryDTO> createCategory(@Valid @RequestBody CategoryDTO categoryDTO) {
-        return ResponseEntity.ok(categoryService.createCategory(categoryDTO));
+    public ResponseEntity<CategoryDto> createCategory(@RequestBody CategoryDto categoryDto) {
+        return ResponseEntity.ok(categoryService.save(categoryDto));
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<CategoryDTO> getCategoryById(@PathVariable Long id) {
-        return ResponseEntity.ok(categoryService.getCategoryById(id));
+    @PostMapping("/{categoryId}/subcategories")
+    public ResponseEntity<CategoryDto> createSubCategory(@PathVariable Integer categoryId, @RequestBody CategoryDto subCategoryDto) {
+        Category parentCategory = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new RuntimeException("Parent category not found"));
+
+        Category subCategory = CategoryMapper.map(subCategoryDto);
+        subCategory.setParentCategory(parentCategory);
+        subCategory = categoryRepository.save(subCategory);
+        return ResponseEntity.ok(CategoryMapper.map(subCategory));
     }
 
-    @GetMapping("/allCategories")
-    public ResponseEntity<List<CategoryDTO>> getAllCategories() {
-        return ResponseEntity.ok(categoryService.getAllCategories());
+    @PutMapping("/{categoryId}")
+    public ResponseEntity<CategoryDto> updateCategory(@PathVariable Integer categoryId, @RequestBody CategoryDto categoryDto) {
+        return ResponseEntity.ok(categoryService.update(categoryId, categoryDto));
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<CategoryDTO> updateCategory(@PathVariable Long id, @Valid @RequestBody CategoryDTO categoryDTO) {
-        return ResponseEntity.ok(categoryService.updateCategory(id, categoryDTO));
-    }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteCategory(@PathVariable Long id) {
-        categoryService.deleteCategory(id);
+    @DeleteMapping("/{categoryId}")
+    public ResponseEntity<Void> deleteCategory(@PathVariable Integer categoryId) {
+        categoryService.deleteCategory(categoryId);
         return ResponseEntity.noContent().build();
     }
-
-    @GetMapping("/{id}/products")
-    public ResponseEntity<List<ProductDTO>> getProductsByCategory(@PathVariable Long id) {
-        List<ProductDTO> products = productService.getProductsByCategoryId(id);
-        return ResponseEntity.ok(products);
+    @GetMapping
+    public ResponseEntity<List<CategoryDto>> getAllCategories() {
+        return ResponseEntity.ok(categoryService.findAllCategories());
     }
+
 }

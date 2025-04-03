@@ -4,44 +4,74 @@ import com.ecom.product.dto.Unit;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "products")
 public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private String name;
-    private double price;
+    private Integer productId;
 
-    @ManyToOne
-    @JoinColumn(name = "category_id")
+    private String productTitle;
+    @Column(unique = true)
+    private String sku;
+    private Double priceUnit;
+    private Integer quanity;
+
+    // many products has one category
+    // Why fetch type is eager means. when we fetch the products we also should have to get the Category
+    //When you fetch the product i need the category
+    @ManyToOne(fetch = FetchType.EAGER)
     private Category category;
 
-    @Enumerated(EnumType.STRING)
-    private Unit unit;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "subcategory_category_id") // Subcategory
+    private Category subcategory;
 
-    public Long getId() {
-        return id;
+    public Category getSubcategory() {
+        return subcategory;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setSubcategory(Category subcategory) {
+        this.subcategory = subcategory;
     }
 
-    public String getName() {
-        return name;
+    public Integer getProductId() {
+        return productId;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setProductId(Integer productId) {
+        this.productId = productId;
     }
 
-    public double getPrice() {
-        return price;
+    public String getProductTitle() {
+        return productTitle;
     }
 
-    public void setPrice(double price) {
-        this.price = price;
+    public void setProductTitle(String productTitle) {
+        this.productTitle = productTitle;
+    }
+
+    public String getSku() {
+        return sku;
+    }
+
+    public void setSku(String sku) {
+        this.sku = sku;
+    }
+
+    public Double getPriceUnit() {
+        return priceUnit;
+    }
+
+    public void setPriceUnit(Double priceUnit) {
+        this.priceUnit = priceUnit;
+    }
+
+    public Integer getQuanity() {
+        return quanity;
+    }
+
+    public void setQuanity(Integer quanity) {
+        this.quanity = quanity;
     }
 
     public Category getCategory() {
@@ -50,13 +80,5 @@ public class Product {
 
     public void setCategory(Category category) {
         this.category = category;
-    }
-
-    public Unit getUnit() {
-        return unit;
-    }
-
-    public void setUnit(Unit unit) {
-        this.unit = unit;
     }
 }
