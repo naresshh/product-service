@@ -10,11 +10,11 @@ public interface ProductMapper {
 
     public static Product map(ProductDto productDto){
         Category category = new Category();
-        category.setCategoryId(productDto.getCategoryDto().getCategoryId());
+        category.setCategoryId(productDto.getCategory().getCategoryId());
 
         // Handle subcategory mapping
         Category subcategory = new Category();
-        subcategory.setCategoryId(productDto.getCategoryDto().getCategoryId()); // Assuming you have a subcategory DTO
+        subcategory.setCategoryId(productDto.getCategory().getCategoryId()); // Assuming you have a subcategory DTO
 
         Product product = new Product();
         product.setCategory(category);
@@ -36,7 +36,7 @@ public interface ProductMapper {
         subcategoryDto.setCategoryTitle(product.getSubcategory().getCategoryTitle());
 
         ProductDto productDto = new ProductDto();
-        productDto.setCategoryDto(categoryDto);
+        productDto.setCategory(categoryDto);
         productDto.setSubcategoryDto(subcategoryDto); // Set subcategory DTO
         BeanUtils.copyProperties(product, productDto);
         return productDto;

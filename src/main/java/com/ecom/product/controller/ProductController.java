@@ -32,10 +32,10 @@ public class ProductController {
         return ResponseEntity.ok(productService.update(productId, productDto));
     }
 
-    @GetMapping("/{productId}")
-    public ResponseEntity<ProductDto> getProductById(@PathVariable Integer productId) {
-        return ResponseEntity.ok(productService.findById(productId));
-    }
+        @GetMapping("/{productId}")
+        public ResponseEntity<ProductDto> getProductById(@PathVariable Integer productId) {
+            return ResponseEntity.ok(productService.findById(productId));
+        }
 
     @GetMapping
     public ResponseEntity<List<ProductDto>> getAllProducts() {

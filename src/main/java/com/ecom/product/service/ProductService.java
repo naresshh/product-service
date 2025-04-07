@@ -24,7 +24,7 @@ public class ProductService {
     }
 
     public ProductDto createProduct(ProductDto productDto) {
-        Category category = categoryRepository.findById(productDto.getCategoryDto().getCategoryId())
+        Category category = categoryRepository.findById(productDto.getCategory().getCategoryId())
                 .orElseThrow(() -> new RuntimeException("Category not found"));
 
         Category subcategory = null;
@@ -54,7 +54,8 @@ public class ProductService {
     }
 
     public ProductDto findById(Integer productId) {
-        return productRepository.findById(productId).map(ProductMapper::map)
+        return productRepository.findById(productId)
+                .map(ProductMapper::map)
                 .orElseThrow(() -> new ProductNotFoundException("Product with ID " + productId + " not found"));
     }
 

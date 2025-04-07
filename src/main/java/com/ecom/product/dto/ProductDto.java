@@ -12,9 +12,9 @@ public class ProductDto {
     private Double priceUnit;
     private Integer quanity;
 
-    @JsonProperty("category")
+
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private CategoryDto categoryDto;
+    private CategoryDto category;
 
     private CategoryDto subcategoryDto;
 
@@ -58,12 +58,12 @@ public class ProductDto {
         this.quanity = quanity;
     }
 
-    public CategoryDto getCategoryDto() {
-        return categoryDto;
+    public CategoryDto getCategory() {
+        return category;
     }
 
-    public void setCategoryDto(CategoryDto categoryDto) {
-        this.categoryDto = categoryDto;
+    public void setCategory(CategoryDto category) {
+        this.category = category;
     }
 
     public CategoryDto getSubcategoryDto() {
